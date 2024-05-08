@@ -1,0 +1,160 @@
+#include <iostream>
+using namespace std;
+
+class node
+{
+
+public:
+    int data;
+    node *left;
+    node *right;
+
+    node(int d)
+    {
+        this->data = d;
+        this->left = NULL;
+        this->right = NULL;
+    }
+};
+node *insertintobst(node *root, int data)
+{
+    if (root == NULL)
+    {
+        root = new node(data);
+        return root;
+    }
+
+    if (root->data < data)
+    {
+        root->right = insertintobst(root->right, data);
+    }
+    else
+    {
+        root->left = insertintobst(root->left, data);
+    }
+    return root;
+}
+
+void takeinputdata(node *&root)
+{
+    int data;
+    cin >> data;
+
+    while (data != -1)
+    {
+        root = insertintobst(root, data);
+        cin >> data;
+    }
+}
+
+void preorder(node *root)
+{
+    if (root != NULL)
+    {
+        cout << root->data << " ";
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+bool search(node *root, int data)
+{
+    if (root == NULL)
+    {
+        return false;
+    }
+
+    if (root->data == data)
+    {
+        return true;
+    }
+
+    if (root->data > data)
+    {
+        return search(root->left, data);
+    }
+    else
+    {
+        return search(root->right, data);
+    }
+}
+
+node *minval(node *root)
+{
+    node *temp = root;
+    while (temp->left != NULL)
+    {
+        temp = temp->left;
+    }
+    return temp;
+}
+
+node *maxval(node *root)
+{
+    node *temp = root;
+    while (temp->right != NULL)
+    {
+        temp = temp->right;
+    }
+    return temp;
+}
+
+node *delnode(node *root, int data)
+{
+    if (root == NULL)
+    {
+        return root;
+    }
+
+    if (data < root->data)
+    {
+        root->left = delnode(root->left, data);
+    }
+    else if (data > root->data)
+    {
+        root->right = delnode(root->right, data);
+    }
+    else
+    {
+        // node with only one child or no child
+        if (root->left == NULL)
+        {
+            node *temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            node *temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        int mini = minval(root->right)->data;
+        root->data = mini;
+        root->right = delnode(root->right, mini);
+    }
+    return root;
+}
+
+int main()
+{
+    node *root = NULL;
+
+    cout << "enter the data to enter in bst" << endl;
+    takeinputdata(root);
+    preorder(root);
+    if (search(root, 27) == true)
+    {
+        cout << "yes it is there" << endl;
+    }
+    else
+    {
+        cout << "no it's not there" << endl;
+    }
+
+    cout << "\n";
+    root = delnode(root, 7);
+    preorder(root);
+    return 0;
+}
