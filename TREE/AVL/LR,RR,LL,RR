@@ -1,0 +1,144 @@
+#include <iostream>
+using namespace std;
+
+class avl {
+private:
+    class node {
+    public:
+        int key, height;
+        node *left, *right;
+        node(int d) {
+            key = d;
+            height = 1;
+            left = right = NULL;
+        }
+
+        int heightfin(node *n) {
+            if (n == NULL) {
+                return 0;
+            }
+            return n->height;
+        }
+
+        int max(int a, int b) {
+            return (a > b) ? a : b;
+        }
+
+        node *rightrotate(node *y) {
+            node *x = y->left;
+            node *t2 = x->right;
+
+            x->right = y;
+            y->left = t2;
+
+            y->height = max(heightfin(y->left), heightfin(y->right)) + 1;
+            x->height = max(heightfin(x->left), heightfin(x->right)) + 1;
+
+            return x;
+        }
+
+        node *leftrotate(node *x) {
+            node *y = x->right;
+            node *t2 = y->left;
+
+            y->left = x;
+            x->right = t2;
+
+            x->height = max(heightfin(x->left), heightfin(x->right)) + 1;
+            y->height = max(heightfin(y->left), heightfin(y->right)) + 1;
+
+            return y;
+        }
+
+        int getbalance(node *n) {
+            if (n == NULL) {
+                return 0;
+            }
+            return heightfin(n->left) - heightfin(n->right);
+        }
+
+        node *insert(node *nod, int key) {
+            if (nod == NULL) {
+                return new node(key);
+            }
+
+            if (key < nod->key) {
+                nod->left = insert(nod->left, key);
+            }
+            else if (key > nod->key) {
+                nod->right = insert(nod->right, key);
+            }
+            else {
+                return nod;
+            }
+
+            nod->height = 1 + max(heightfin(nod->left), heightfin(nod->right));
+
+            int balance = getbalance(nod);
+
+            if (balance > 1 && key < nod->left->key) {
+                return rightrotate(nod);
+            }
+
+            if (balance < -1 && key > nod->right->key) {
+                return leftrotate(nod);
+            }
+
+            if (balance > 1 && key > nod->left->key) {
+                nod->left = leftrotate(nod->left);
+                return rightrotate(nod);
+            }
+
+            if (balance < -1 && key < nod->right->key) {
+                nod->right = rightrotate(nod->right);
+                return leftrotate(nod);
+            }
+
+            return nod;
+        }
+
+    public:
+        node *insertRec(node *root, int key) {
+            return insert(root, key);
+        }
+
+        void inorderRec(node *root) {
+            if (root != nullptr) {
+                inorderRec(root->left);
+                cout << root->key << " ";
+                inorderRec(root->right);
+            }
+        }
+    };
+
+public:
+    node *root;
+    avl() : root(nullptr) {}
+
+    // Function to insert a key in the AVL tree
+    void insert(int key) {
+        root = root->insert(root, key);
+    }
+
+    // Function to print inorder traversal of the tree
+    void inorder() {
+        cout << "Inorder traversal of the AVL tree is: ";
+        root->inorderRec(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    avl tree;
+    
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(40);
+    tree.insert(50);
+    tree.insert(25);
+
+    tree.inorder();
+
+    return 0;
+}
