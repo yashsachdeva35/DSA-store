@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+const int n = 6;  // Global constant for array size
+
+// Function prototypes
+void selectionsort(int arr[]);  // Function to perform selection sort
+void swap(int *a, int *b);       // Function to swap two elements
+void display(int arr[]);         // Function to display the array
+
+int main()
+{
+    int arr[] = {78, 45, 96, 32, 93, 44};  // Initialize array
+    display(arr);  // Display the original array
+    selectionsort(arr);  // Sort the array using selection sort
+    display(arr);  // Display the sorted array
+    return 0;
+}
+
+// Function to perform selection sort
+void selectionsort(int arr[])
+{
+    // Loop through each element in the array
+    for (int i = 0; i < n-1; i++)
+    {
+        int min = i;  // Assume the current element is the minimum
+
+        // Find the minimum element in the unsorted part
+        for (int j = i+1; j < n; j++)
+        {
+            if (arr[j] < arr[min])
+            {
+                min = j;  // Update the index of the minimum element
+            }
+        }
+
+        // Swap the found minimum element with the first element
+        swap(&arr[i], &arr[min]);
+    }
+}
+
+// Function to swap two elements
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void display(int arr[])
+{
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
