@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <math.h>
+const int n = 6; // Global constant for the size of the array
+
+// Function prototypes
+void mergefunct(int arr[], int a, int b, int d);
+void mergesort(int arr[], int p1, int p2);
+void display(int arr[]);
+
+int main()
+{
+    int arr[] = {78, 45, 96, 32, 93, 44}; // Initialize the array
+    display(arr); // Display the original array
+    mergesort(arr, 0, n - 1); // Sort the array using merge sort
+    display(arr); // Display the sorted array
+    return 0;
+}
+
+// Merge function to merge two sorted halves of an array
+void mergefunct(int arr[], int a, int b, int d)
+{
+    int i = a, j = b + 1, k = a; // Initialize variables for merging
+    int f[100]; // Temporary array to store merged elements
+
+    // Merge the two halves into the temporary array
+    while (i <= b && j <= d)
+    {
+        if (arr[i] < arr[j])
+        {
+            f[k] = arr[i];
+            i++;
+            k++;
+        }
+        else
+        {
+            f[k] = arr[j];
+            j++;
+            k++;
+        }
+    }
+
+    // Copy the remaining elements of left subarray to temporary array
+    while (i <= b)
+    {
+        f[k] = arr[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of right subarray to temporary array
+    while (j <= d)
+    {
+        f[k] = arr[j];
+        j++;
+        k++;
+    }
+
+    // Copy the merged elements from temporary array back to original array
+    for (int i = a; i <= d; i++)
+    {
+        arr[i] = f[i];
+    }
+}
+
+// Merge sort function
+void mergesort(int arr[], int p1, int p2)
+{
+    if (p1 < p2)
+    {
+        int a = p1, b = (p1 + p2) / 2, c = b + 1, d = p2; // Divide the array into two halves
+        mergesort(arr, a, b); // Recursively sort the left half
+        mergesort(arr, c, d); // Recursively sort the right half
+        mergefunct(arr, a, b, d); // Merge the sorted halves
+    }
+}
+
+// Function to display the elements of the array
+void display(int arr[])
+{
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
